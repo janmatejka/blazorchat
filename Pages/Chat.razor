@@ -1,0 +1,83 @@
+@page "/chat"
+@using System.Collections.Concurrent
+@inject NavigationManager Navigation
+
+<PageTitle>Chat</PageTitle>
+
+@if (string.IsNullOrWhiteSpace(UserName))
+{
+    <div class="mt-4">
+        <h3>Zadejte své jméno:</h3>
+        <input @bind="TempName" @bind:event="oninput" @onkeydown="OnEnter" placeholder="Vaše jméno" class="form-control" />
+        <button class="btn btn-primary mt-2" @onclick="SetName">Přihlásit se</button>
+    </div>
+}
+else
+{
+    <div class="mt-4">
+        <h4>Vítejte, @UserName!</h4>
+        <button class="btn btn-link" @onclick="Logout">Změnit jméno</button>
+        <div class="chat-box border rounded p-2 mb-2" style="height:300px; overflow-y:auto; background:#f8f9fa;">
+            @foreach (var msg in Messages)
+            {
+                <div><b>@msg.User:</b> @msg.Text</div>
+            }
+        </div>
+        <div class="input-group">
+            <input class="form-control" @bind="CurrentMessage" @bind:event="oninput" @onkeydown="OnMessageEnter" placeholder="Napište zprávu..." />
+            <button class="btn btn-success" @onclick="SendMessage">Odeslat</button>
+        </div>
+    </div>
+}
+
+@code {
+    private static readonly List<ChatMessage> Messages = new();
+    private string? UserName;
+    private string? TempName;
+    private string? CurrentMessage;
+
+    private void SetName()
+    {
+        if (!string.IsNullOrWhiteSpace(TempName))
+        {
+            UserName = TempName;
+        }
+    }
+
+    private void Logout()
+    {
+        UserName = null;
+        TempName = null;
+    }
+
+    private void SendMessage()
+    {
+        if (!string.IsNullOrWhiteSpace(CurrentMessage) && !string.IsNullOrWhiteSpace(UserName))
+        {
+            Messages.Add(new ChatMessage { User = UserName, Text = CurrentMessage });
+            CurrentMessage = string.Empty;
+        }
+    }
+
+    private void OnEnter(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            SetName();
+        }
+    }
+
+    private void OnMessageEnter(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            SendMessage();
+        }
+    }
+
+    private class ChatMessage
+    {
+        public string User { get; set; } = string.Empty;
+        public string Text { get; set; } = string.Empty;
+    }
+}
