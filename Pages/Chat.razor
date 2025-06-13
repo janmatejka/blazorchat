@@ -1,8 +1,11 @@
 @page "/chat"
-@using System.Collections.Concurrent
+@using blazorchat3.Data
 @inject NavigationManager Navigation
+@inject ChatService ChatService
 
 <PageTitle>Chat</PageTitle>
+
+@implements IDisposable
 
 @if (string.IsNullOrWhiteSpace(UserName))
 {
@@ -18,7 +21,7 @@ else
         <h4>Vítejte, @UserName!</h4>
         <button class="btn btn-link" @onclick="Logout">Změnit jméno</button>
         <div class="chat-box border rounded p-2 mb-2" style="height:300px; overflow-y:auto; background:#f8f9fa;">
-            @foreach (var msg in Messages)
+            @foreach (var msg in ChatService.Messages)
             {
                 <div><b>@msg.User:</b> @msg.Text</div>
             }
@@ -31,10 +34,24 @@ else
 }
 
 @code {
-    private static readonly List<ChatMessage> Messages = new();
     private string? UserName;
     private string? TempName;
     private string? CurrentMessage;
+
+    protected override void OnInitialized()
+    {
+        ChatService.OnMessagesChanged += OnMessagesChanged;
+    }
+
+    private void OnMessagesChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        ChatService.OnMessagesChanged -= OnMessagesChanged;
+    }
 
     private void SetName()
     {
@@ -54,7 +71,7 @@ else
     {
         if (!string.IsNullOrWhiteSpace(CurrentMessage) && !string.IsNullOrWhiteSpace(UserName))
         {
-            Messages.Add(new ChatMessage { User = UserName, Text = CurrentMessage });
+            ChatService.AddMessage(UserName, CurrentMessage);
             CurrentMessage = string.Empty;
         }
     }
@@ -73,11 +90,5 @@ else
         {
             SendMessage();
         }
-    }
-
-    private class ChatMessage
-    {
-        public string User { get; set; } = string.Empty;
-        public string Text { get; set; } = string.Empty;
     }
 }
