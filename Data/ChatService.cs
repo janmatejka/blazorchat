@@ -13,6 +13,15 @@ namespace blazorchat3.Data
             _messages.Add(new ChatMessage { User = user, Text = text });
             OnMessagesChanged?.Invoke();
         }
+
+        public void EditMessage(ChatMessage message, string newText)
+        {
+            if (_messages.Contains(message))
+            {
+                message.Text = newText;
+                OnMessagesChanged?.Invoke();
+            }
+        }
     }
 
     public class ChatMessage
