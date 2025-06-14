@@ -23,22 +23,25 @@ else
         <div class="chat-box border rounded p-2 mb-2" style="height:300px; overflow-y:auto; background:#f8f9fa;">
             @foreach (var msg in ChatService.Messages)
             {
-                <div>
-                    <b>@msg.User:</b>
-                    @if (IsEditing(msg))
-                    {
-                        <input class="form-control d-inline w-auto" style="max-width:60%" @bind="EditText" @bind:event="oninput" @onkeydown="(e) => OnEditKeyDown(e, msg)" />
-                        <button class="btn btn-sm btn-success ms-1" @onclick="() => SaveEdit(msg)">Uložit</button>
-                        <button class="btn btn-sm btn-secondary ms-1" @onclick="CancelEdit">Zrušit</button>
-                    }
-                    else
-                    {
-                        @msg.Text
-                        @if (UserName == msg.User)
+                var isOwn = UserName == msg.User;
+                <div class="d-flex mb-2 @(isOwn ? "justify-content-end" : "justify-content-start")">
+                    <div class="chat-bubble @(isOwn ? "own" : "other")">
+                        <div class="chat-username mb-1 @(isOwn ? "own" : "other")">@msg.User</div>
+                        @if (IsEditing(msg))
                         {
-                            <button class="btn btn-sm btn-link ms-2 p-0" title="Upravit" @onclick="() => StartEdit(msg)">✏️</button>
+                            <input class="form-control d-inline w-auto" style="max-width:60%" @bind="EditText" @bind:event="oninput" @onkeydown="(e) => OnEditKeyDown(e, msg)" />
+                            <button class="btn btn-sm btn-success ms-1" @onclick="() => SaveEdit(msg)">Uložit</button>
+                            <button class="btn btn-sm btn-secondary ms-1" @onclick="CancelEdit">Zrušit</button>
                         }
-                    }
+                        else
+                        {
+                            <span>@msg.Text</span>
+                            @if (isOwn)
+                            {
+                                <button class="btn btn-sm btn-link ms-2 p-0" title="Upravit" @onclick="() => StartEdit(msg)">✏️</button>
+                            }
+                        }
+                    </div>
                 </div>
             }
         </div>
