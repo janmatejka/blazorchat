@@ -1,3 +1,27 @@
+/* Chat container and box responsive grow */
+/* Reset container styling for proper flex layout */
+.chat-container {
+    height: calc(100vh - 7rem); /* výška okna mínus výška horního pruhu a dalších prvků */
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-container .chat-header {
+    flex: 0 0 auto;
+}
+
+.chat-container .chat-box {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    margin-bottom: 0.5rem;
+}
+
+.chat-container .input-group {
+    flex: 0 0 auto;
+    margin: 0;
+    padding-bottom: 0;
+}
 /* Chat username styling */
 .chat-username {
     font-size: 1.15rem;

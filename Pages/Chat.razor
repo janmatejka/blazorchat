@@ -17,10 +17,12 @@
 }
 else
 {
-    <div class="mt-4">
-        <h4>Vítejte, @UserName!</h4>
-        <button class="btn btn-link" @onclick="Logout">Změnit jméno</button>
-        <div class="chat-box border rounded p-2 mb-2" style="height:300px; overflow-y:auto; background:#f8f9fa;">
+    <div class="chat-container d-flex flex-column">
+        <div class="chat-header">
+            <h4>Vítejte, @UserName!</h4>
+            <button class="btn btn-link" @onclick="Logout">Změnit jméno</button>
+        </div>
+        <div class="chat-box border rounded p-2 mb-2 flex-grow-1 d-flex flex-column" style="background:#f8f9fa; overflow-y: auto; min-height: 200px;">
             @foreach (var msg in ChatService.Messages)
             {
                 var isOwn = UserName == msg.User;
@@ -45,7 +47,7 @@ else
                 </div>
             }
         </div>
-        <div class="input-group">
+        <div class="input-group mt-auto mb-0">
             <input class="form-control" @bind="CurrentMessage" @bind:event="oninput" @onkeydown="OnMessageEnter" placeholder="Napište zprávu..." />
             <button class="btn btn-success" @onclick="SendMessage">Odeslat</button>
         </div>
