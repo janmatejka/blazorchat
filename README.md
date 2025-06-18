@@ -1,6 +1,6 @@
 # BlazorChat3
 
-Jednoduchá Blazor Server aplikace pro chatování v jedné místnosti.
+Jednoduchá Blazor Server aplikace pro chatování v jedné místnosti generovaná copilotem.
 
 ## Funkce
 - Uživatel zadá pouze své jméno (bez autentizace)
