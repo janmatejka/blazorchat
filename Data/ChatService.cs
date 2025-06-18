@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 
 namespace blazorchat3.Data
@@ -7,6 +8,12 @@ namespace blazorchat3.Data
         public event Action? OnMessagesChanged;
         private readonly List<ChatMessage> _messages = new();
         public IReadOnlyList<ChatMessage> Messages => _messages;
+
+        public void ClearMessages()
+        {
+            _messages.Clear();
+            OnMessagesChanged?.Invoke();
+        }
 
         public void AddMessage(string user, string text)
         {

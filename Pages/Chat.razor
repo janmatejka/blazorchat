@@ -50,11 +50,16 @@ else
         <div class="input-group mt-auto mb-0">
             <input class="form-control" @bind="CurrentMessage" @bind:event="oninput" @onkeydown="OnMessageEnter" placeholder="Napište zprávu..." />
             <button class="btn btn-success" @onclick="SendMessage">Odeslat</button>
+            <button class="btn btn-outline-danger ms-2" @onclick="ClearChat" title="Vyčistit chat">🗑️</button>
         </div>
     </div>
 }
 
 @code {
+    private void ClearChat()
+    {
+        ChatService.ClearMessages();
+    }
     private string? UserName;
     private string? TempName;
     private string? CurrentMessage;
